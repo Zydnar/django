@@ -561,7 +561,11 @@ class BaseModelFormSet(BaseFormSet):
             # django.db has side effects.
             from django.db import connections
             pk_key = "%s-%s" % (self.add_prefix(i), self.model._meta.pk.name)
-            pk = self.data[pk_key]
+            try:
+                pk = self.data[pk_key]
+            except:
+                if pk_key == u'profile-0-id':
+                    pk = self.data[u'profileuseragent_set-__prefix__-user']
             pk_field = self.model._meta.pk
             pk = pk_field.get_db_prep_lookup('exact', pk,
                 connection=connections[self.get_queryset().db])
